@@ -2,6 +2,49 @@
 // Secure Anthropic API proxy — your API key is stored safely as an
 // environment variable in Vercel and is NEVER exposed to students.
 
+// ─── Rate Limiting (in-memory, resets on cold start) ────────────────────────
+// Limits each IP to 20 requests per hour and 5 requests per minute
+const rateLimitStore = new Map();
+
+const LIMITS = {
+  perMinute: 5,    // max requests per IP per minute
+  perHour: 20,     // max requests per IP per hour
+};
+
+function getRateLimitEntry(ip) {
+  const now = Date.now();
+  if (!rateLimitStore.has(ip)) {
+    rateLimitStore.set(ip, { minute: [], hour: [] });
+  }
+  const entry = rateLimitStore.get(ip);
+  // Clean up old timestamps
+  entry.minute = entry.minute.filter(t => now - t < 60_000);
+  entry.hour   = entry.hour.filter(t => now - t < 3_600_000);
+  return entry;
+}
+
+function isRateLimited(ip) {
+  const entry = getRateLimitEntry(ip);
+  if (entry.minute.length >= LIMITS.perMinute) return { limited: true, reason: 'Too many requests. Please wait a minute and try again.' };
+  if (entry.hour.length   >= LIMITS.perHour)   return { limited: true, reason: 'Hourly limit reached. Please try again later.' };
+  return { limited: false };
+}
+
+function recordRequest(ip) {
+  const entry = getRateLimitEntry(ip);
+  const now = Date.now();
+  entry.minute.push(now);
+  entry.hour.push(now);
+}
+
+// ─── Input limits ────────────────────────────────────────────────────────────
+const MAX_CONTENT_CHARS = 3000;  // ~500 words
+const MAX_JOBTITLE_CHARS = 100;
+const MAX_QUESTION_CHARS = 500;
+
+// ─── Allowed types (whitelist) ───────────────────────────────────────────────
+const ALLOWED_TYPES = new Set(['resume', 'cover', 'interview', 'report']);
+
 module.exports = async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -17,15 +60,51 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // ── Rate limit check ──────────────────────────────────────────────────────
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
+  const { limited, reason } = isRateLimited(ip);
+  if (limited) {
+    return res.status(429).json({ error: reason });
+  }
+
   const { type, content, jobTitle, question } = req.body;
 
+  // ── Input validation ──────────────────────────────────────────────────────
   if (!type || !content) {
     return res.status(400).json({ error: 'Missing required fields: type and content' });
+  }
+
+  if (!ALLOWED_TYPES.has(type)) {
+    return res.status(400).json({ error: 'Invalid type. Use: resume, cover, interview, or report' });
+  }
+
+  if (typeof content !== 'string' || content.trim().length === 0) {
+    return res.status(400).json({ error: 'Content must be a non-empty string.' });
+  }
+
+  if (content.length > MAX_CONTENT_CHARS) {
+    return res.status(400).json({ error: `Content is too long. Please keep it under ${MAX_CONTENT_CHARS} characters (~500 words).` });
+  }
+
+  if (jobTitle && jobTitle.length > MAX_JOBTITLE_CHARS) {
+    return res.status(400).json({ error: 'Job title is too long.' });
+  }
+
+  if (question && question.length > MAX_QUESTION_CHARS) {
+    return res.status(400).json({ error: 'Interview question is too long.' });
   }
 
   if (!process.env.ANTHROPIC_API_KEY) {
     return res.status(500).json({ error: 'API key not configured. Please add ANTHROPIC_API_KEY in Vercel environment variables.' });
   }
+
+  // Record this request only after all validation passes
+  recordRequest(ip);
+
+  // ── Sanitize inputs before injecting into prompts ─────────────────────────
+  const safeContent  = content.replace(/[<>]/g, '').trim();
+  const safeTitle    = (jobTitle  || 'General').replace(/[<>]/g, '').trim().slice(0, MAX_JOBTITLE_CHARS);
+  const safeQuestion = (question  || '').replace(/[<>]/g, '').trim().slice(0, MAX_QUESTION_CHARS);
 
   // Build prompt based on feedback type
   let prompt = '';
@@ -33,9 +112,9 @@ module.exports = async function handler(req, res) {
   if (type === 'resume') {
     prompt = `You are Dr. Maya, a warm and encouraging career coach helping adults with developmental disabilities practice job applications.
 
-A student applying for a "${jobTitle}" position has uploaded their resume:
+A student applying for a "${safeTitle}" position has uploaded their resume:
 
-${content}
+${safeContent}
 
 Give friendly, simple, encouraging feedback at a 3rd grade reading level. Use short sentences. Cover:
 1. One or two specific strengths you noticed
@@ -47,9 +126,9 @@ Keep your response under 120 words. Write in short paragraphs. Do NOT use bullet
   } else if (type === 'cover') {
     prompt = `You are Dr. Maya, a warm and encouraging career coach helping adults with developmental disabilities practice job applications.
 
-A student applying for a "${jobTitle}" position has submitted their cover letter:
+A student applying for a "${safeTitle}" position has submitted their cover letter:
 
-${content}
+${safeContent}
 
 Give friendly, simple feedback at a 3rd grade reading level. Use short sentences. Cover:
 1. What they did well
@@ -61,11 +140,11 @@ Keep your response under 120 words. Write in short paragraphs. Do NOT use bullet
   } else if (type === 'interview') {
     prompt = `You are Dr. Maya, a warm career coach helping adults with developmental disabilities practice job interviews.
 
-The student was asked this interview question for a "${jobTitle}" job:
-"${question}"
+The student was asked this interview question for a "${safeTitle}" job:
+"${safeQuestion}"
 
 Here is what they said:
-"${content}"
+"${safeContent}"
 
 Give simple, encouraging feedback at a 3rd grade reading level:
 1. One thing they did really well
@@ -76,10 +155,10 @@ Keep it under 80 words. Be warm and supportive. Do NOT use bullet points.`;
   } else if (type === 'report') {
     prompt = `You are Dr. Maya, a warm career coach helping adults with developmental disabilities practice job applications.
 
-A student just completed a full mock job application practice for a "${jobTitle}" position.
+A student just completed a full mock job application practice for a "${safeTitle}" position.
 
 Their interview answers:
-${content}
+${safeContent}
 
 Write a short encouraging overall summary at a 3rd grade reading level:
 1. Their biggest strength across all answers

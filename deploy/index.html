@@ -340,123 +340,43 @@
   /* SECTION LABEL BADGES */
   .section-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--navy); color: white; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 800; margin-bottom: 16px; }
 
+  /* ── ACCESSIBILITY TOOLBAR ── */
+  .acc-bar { position: fixed; top: 14px; right: 16px; z-index: 9999; display: flex; gap: 8px; }
+  .acc-btn { background: rgba(255,255,255,0.95); border: 2px solid rgba(0,0,0,0.18); border-radius: 50%; width: 42px; height: 42px; font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.22); display: flex; align-items: center; justify-content: center; transition: transform 0.15s, background 0.15s; line-height: 1; }
+  .acc-btn:hover { transform: scale(1.12); background: #fff; }
 
-  /* ═══ ACCESSIBILITY TOOLBAR ═══ */
-  .a11y-bar {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    z-index: 9998;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-end;
-  }
-  .a11y-btn {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.4);
-    background: var(--navy);
-    color: white;
-    font-size: 1.4rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-    transition: all 0.2s;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 800;
-  }
-  .a11y-btn:hover { transform: scale(1.1); background: var(--teal); }
-  .a11y-btn.on { background: var(--teal); border-color: white; }
-  .a11y-label {
-    background: var(--navy);
-    color: white;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.2s;
-    pointer-events: none;
-  }
-  .a11y-row { display: flex; align-items: center; gap: 8px; }
-  .a11y-row:hover .a11y-label { opacity: 1; }
+  /* ── LARGE FONT MODE ── */
+  body.large-font { font-size: 1.14rem; }
+  body.large-font h1 { font-size: 2.4rem; }
+  body.large-font h2 { font-size: 1.9rem; }
+  body.large-font h3 { font-size: 1.4rem; }
+  body.large-font p, body.large-font label, body.large-font li { font-size: 1.1rem; }
+  body.large-font .btn { font-size: 1.08rem; padding: 14px 22px; }
+  body.large-font input, body.large-font select, body.large-font textarea { font-size: 1.1rem; padding: 14px 16px; }
 
-  /* ─── LARGE FONT MODE ─── */
-  body.large-font { font-size: 22px !important; }
-  body.large-font .btn       { font-size: 1.25rem !important; padding: 18px 36px !important; }
-  body.large-font .tab-btn   { font-size: 1.1rem !important; padding: 12px 24px !important; }
-  body.large-font .tip-list li,
-  body.large-font .qa-item .qa-q,
-  body.large-font .qa-item .qa-a,
-  body.large-font .cover-sample,
-  body.large-font .resume-job ul li { font-size: 1.1rem !important; }
-  body.large-font h1  { font-size: 2.4rem !important; }
-  body.large-font h2  { font-size: 1.8rem !important; }
-  body.large-font h3  { font-size: 1.3rem !important; }
-  body.large-font .form-group input,
-  body.large-font .form-group select { font-size: 1.15rem !important; padding: 16px 20px !important; }
-  body.large-font .job-card h3 { font-size: 1.3rem !important; }
-  body.large-font .pill       { font-size: 1rem !important; }
-
-  /* ─── DARK MODE ─── */
-  body.dark-mode {
-    --white:    #1e1e2e;
-    --gray-50:  #181825;
-    --gray-100: #252535;
-    --gray-200: #3a3a50;
-    --gray-600: #b0b0cc;
-    --gray-700: #d0d0e8;
-    --navy:     #e0e0f5;
-    --teal-light: #1a2e2a;
-    --gold-light: #2a2010;
-    background-color: #181825;
-    color: #e0e0f5;
-  }
-  body.dark-mode .login-card,
-  body.dark-mode .card,
-  body.dark-mode .job-card,
-  body.dark-mode .learn-card,
-  body.dark-mode .qa-item,
-  body.dark-mode .cover-sample,
-  body.dark-mode .resume-sample { background: #252535 !important; border-color: #3a3a50 !important; color: #e0e0f5 !important; }
-  body.dark-mode .resume-sample .rs-header { background: #0f1f3a !important; }
-  body.dark-mode .topbar        { background: #1e1e2e !important; border-color: #3a3a50 !important; }
-  body.dark-mode .logo-banner   { background: #0f1020 !important; }
-  body.dark-mode .learn-hero,
-  body.dark-mode .bp-hero       { background: #0f1020 !important; }
-  body.dark-mode .form-group input,
-  body.dark-mode .form-group select,
-  body.dark-mode textarea       { background: #2a2a3e !important; border-color: #4a4a60 !important; color: #e0e0f5 !important; }
-  body.dark-mode .pill          { background: #2a2a3e !important; color: #c0c0e0 !important; }
-  body.dark-mode .btn-back,
-  body.dark-mode .btn-home-sm   { background: #2a2a3e !important; border-color: #4a4a60 !important; color: #e0e0f5 !important; }
-  body.dark-mode .tab-btn       { background: #2a2a3e !important; border-color: #4a4a60 !important; color: #c0c0e0 !important; }
-  body.dark-mode .tab-btn.active { background: var(--teal) !important; color: white !important; }
-  body.dark-mode .dos-box       { background: #1a2e20 !important; border-color: #2a5030 !important; }
-  body.dark-mode .donts-box     { background: #2e1a1a !important; border-color: #502a2a !important; }
-  body.dark-mode .tip-callout   { background: #1a2e2a !important; }
-  body.dark-mode .section-note  { background: #2a2010 !important; }
-  body.dark-mode .maya-guide    { background: #1e1e2e !important; border-color: #3a3a50 !important; }
-  body.dark-mode .upload-zone   { background: #1a2a1e !important; border-color: #3a5030 !important; }
-  body.dark-mode .transcript-box,
-  body.dark-mode .ai-feedback-box { background: #2a2a3e !important; border-color: #4a4a60 !important; }
-  body.dark-mode .student-table thead { background: #252535 !important; }
-  body.dark-mode .student-table tbody tr:hover { background: #2a2a3e !important; }
-  body.dark-mode .sn-card       { background: #252535 !important; }
-  body.dark-mode .report-header { background: #0f1020 !important; }
-  body.dark-mode .stat-card     { background: #252535 !important; border-color: #3a3a50 !important; }
-  body.dark-mode .a11y-btn      { background: #3a3a50 !important; border-color: #6a6a90 !important; }
-  body.dark-mode .a11y-btn.on   { background: var(--teal) !important; }
-  body.dark-mode .a11y-label    { background: #3a3a50 !important; }
+  /* ── DARK MODE ── */
+  body.dark-mode { background: #12192b; color: #dde3f0; }
+  body.dark-mode .screen { background: #12192b; }
+  body.dark-mode .login-card, body.dark-mode .card, body.dark-mode .job-card,
+  body.dark-mode .bp-section, body.dark-mode .maya-guide { background: #1c2840; color: #dde3f0; border-color: #2e4070; }
+  body.dark-mode .topbar, body.dark-mode .logo-banner, body.dark-mode .nav-bar { background: #0d1526; }
+  body.dark-mode .speech-bubble { background: #1c2840; color: #dde3f0; border-left-color: var(--teal); }
+  body.dark-mode input, body.dark-mode select, body.dark-mode textarea { background: #1c2840; color: #dde3f0; border-color: #2e4070; }
+  body.dark-mode .tip-callout { background: #1c2840; color: #dde3f0; border-color: #2e4070; }
+  body.dark-mode .dos-box, body.dark-mode .donts-box { background: #1c2840; border-color: #2e4070; }
+  body.dark-mode .section-note { background: #1c2840; color: #dde3f0; }
+  body.dark-mode .tab-btn { background: #1c2840; color: #dde3f0; border-color: #2e4070; }
+  body.dark-mode .tab-btn.active { background: var(--teal); color: #fff; }
+  body.dark-mode .job-card { background: #1c2840; }
+  body.dark-mode .acc-btn { background: #1c2840; color: #dde3f0; border-color: #2e4070; }
 
 </style>
 </head>
 <body>
+<div class="acc-bar">
+  <button class="acc-btn" id="btn-font" onclick="toggleLargeFont()" title="Toggle large text">A+</button>
+  <button class="acc-btn" id="btn-dark" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
+</div>
 <div class="toast" id="toast"></div>
 
 <!-- ═══ SCREEN: LOGIN ═══ -->
@@ -1259,20 +1179,24 @@ function retryInterview() {
 }
 function pickNewJob() { showScreen('screen-jobs'); }
 function goHome() {
-  // If student is logged in, go to Learn hub (keep session)
-  // Only go to login if not logged in
   if (state.studentName) {
-    if (state.isRecording) {
-      try { if (state.recognition) state.recognition.stop(); } catch(e){}
-      state.isRecording = false;
-      setWaveActive(false);
-    }
+    // Student is logged in — keep session, reset job/interview progress, go to Learn Hub
+    state.selectedJob = null;
+    state.interviewQuestions = [];
+    state.interviewQ = 0;
+    state.interviewAnswers = [];
+    state.isRecording = false;
+    state.recordingTimer = null;
+    state.recognition = null;
+    state.resumeText = '';
+    state.coverText = '';
+    state.resumeUploaded = false;
+    state.coverUploaded = false;
     showScreen('screen-learn');
   } else {
     showScreen('screen-login');
   }
 }
-
 function logOut() {
   state = { studentName:'', selectedJob:null, interviewQuestions:[], interviewQ:0, interviewAnswers:[], isRecording:false, recordingTimer:null, recognition:null, resumeText:'', coverText:'', resumeUploaded:false, coverUploaded:false };
   document.getElementById('student-name').value = '';
@@ -1591,7 +1515,6 @@ const BP_CONTENT = {
   },
 };
 
-// Tracks which BP type is currently open so switchBPTab can reference it
 let currentBPType = 'resume';
 
 function showBP(type) {
@@ -1600,20 +1523,20 @@ function showBP(type) {
   document.getElementById('bp-title').textContent = bp.title;
   document.getElementById('bp-subtitle').textContent = bp.subtitle;
 
-  const dosHtml  = bp.dos.map(d  => '<li><span class="ti">✅</span>' + d + '</li>').join('');
+  const dosHtml   = bp.dos.map(d   => '<li><span class="ti">✅</span>' + d + '</li>').join('');
   const dontsHtml = bp.donts.map(d => '<li><span class="ti">❌</span>' + d + '</li>').join('');
 
   document.getElementById('bp-content').innerHTML =
     '<div class="tabs-row" id="bp-tabs">' +
-      '<button class="tab-btn active"   onclick="switchBPTab('tips',    this)">📖 Tips &amp; Do's/Don'ts</button>' +
-      '<button class="tab-btn"          onclick="switchBPTab('video',   this)">🎬 Watch a Video</button>' +
-      '<button class="tab-btn"          onclick="switchBPTab('samples', this)">📋 See Examples</button>' +
+      '<button class="tab-btn active" onclick="switchBPTab(\'tips\',    this)">📖 Tips &amp; Do\'s/Don\'ts</button>' +
+      '<button class="tab-btn"        onclick="switchBPTab(\'video\',   this)">🎬 Watch a Video</button>' +
+      '<button class="tab-btn"        onclick="switchBPTab(\'samples\', this)">📋 See Examples</button>' +
     '</div>' +
 
     '<div class="tab-panel active" id="bptab-tips">' +
       '<div class="bp-section">' +
         '<div class="tip-callout">' + bp.callout + '</div>' +
-        '<h2>✅ Do's and ❌ Don'ts</h2>' +
+        '<h2>✅ Do\'s and ❌ Don\'ts</h2>' +
         '<div class="dos-donts">' +
           '<div class="dos-box"><h3>✅ Do This!</h3><ul class="tip-list">' + dosHtml + '</ul></div>' +
           '<div class="donts-box"><h3>❌ Avoid This</h3><ul class="tip-list">' + dontsHtml + '</ul></div>' +
@@ -1621,20 +1544,24 @@ function showBP(type) {
       '</div>' +
       '<div class="maya-guide" style="margin-top:24px;">' +
         '<div class="mg-avatar">🧭</div>' +
-        '<div class="mg-text"><strong>Dr. Maya says:</strong> Great job reading the tips! Check out the video and examples tabs too. 🌟</div>' +
+        '<div class="mg-text"><strong>Dr. Maya says:</strong> Great job reading the tips! Now check out the video and examples tabs to learn even more. 🌟</div>' +
       '</div>' +
     '</div>' +
 
     '<div class="tab-panel" id="bptab-video">' +
-      '<p style="font-size:0.88rem;color:var(--gray-600);margin-bottom:16px;text-align:center;">📌 <em>Tip for teachers: swap the YouTube video ID in the code to change this video.</em></p>' +
+      '<p style="font-size:0.88rem;color:var(--gray-600);margin-bottom:16px;text-align:center;">' +
+        '📌 <em>Tip for teachers: to swap this video, replace the YouTube video ID in the code.</em>' +
+      '</p>' +
       '<div class="bp-video-wrap">' +
-        '<iframe src="https://www.youtube-nocookie.com/embed/' + bp.videoId + '?rel=0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" title="' + bp.videoCaption + '"></iframe>' +
+        '<iframe src="https://www.youtube-nocookie.com/embed/' + bp.videoId + '?rel=0"' +
+          ' allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"' +
+          ' title="' + bp.videoCaption + '"></iframe>' +
       '</div>' +
-      '<div class="tip-callout"><strong>🎬 ' + bp.videoCaption + '</strong><br>Watch the full video for more tips and real examples!</div>' +
+      '<div class="tip-callout"><strong>🎬 ' + bp.videoCaption + '</strong><br>Watch the full video to get more helpful tips and see real examples!</div>' +
     '</div>' +
 
     '<div class="tab-panel" id="bptab-samples">' +
-      '<div id="samples-content-holder"></div>' +
+      buildSampleContent(currentBPType) +
     '</div>';
 
   document.getElementById('bp-video').src = '';
@@ -1644,63 +1571,34 @@ function showBP(type) {
 function switchBPTab(tab, btn) {
   document.querySelectorAll('#bp-tabs .tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  ['tips','video','samples'].forEach(t => {
+  ['tips', 'video', 'samples'].forEach(t => {
     const el = document.getElementById('bptab-' + t);
     if (el) el.classList.toggle('active', t === tab);
   });
-  if (tab === 'samples') {
-    const holder = document.getElementById('samples-content-holder');
-    if (holder && holder.innerHTML.trim() === '') {
-      holder.innerHTML = buildSampleContent(currentBPType);
-    }
-  }
 }
-
-
-// ═══ ACCESSIBILITY ═══
-function toggleLargeFont() {
-  const on = document.body.classList.toggle('large-font');
-  document.getElementById('btn-font').classList.toggle('on', on);
-  try { localStorage.setItem('cc-largefont', on ? '1' : ''); } catch(e){}
-}
-function toggleDarkMode() {
-  const on = document.body.classList.toggle('dark-mode');
-  const btn = document.getElementById('btn-dark');
-  btn.classList.toggle('on', on);
-  btn.textContent = on ? '☀️' : '🌙';
-  try { localStorage.setItem('cc-darkmode', on ? '1' : ''); } catch(e){}
-}
-// Restore preferences on load
-(function() {
-  try {
-    if (localStorage.getItem('cc-largefont')) {
-      document.body.classList.add('large-font');
-      document.getElementById('btn-font').classList.add('on');
-    }
-    if (localStorage.getItem('cc-darkmode')) {
-      document.body.classList.add('dark-mode');
-      const btn = document.getElementById('btn-dark');
-      btn.classList.add('on');
-      btn.textContent = '☀️';
-    }
-  } catch(e){}
-})();
 
 // Preload speech voices
 if (window.speechSynthesis) window.speechSynthesis.getVoices();
+
+// ═══ ACCESSIBILITY ═══
+function toggleLargeFont() {
+  document.body.classList.toggle('large-font');
+  try { localStorage.setItem('cc-largefont', document.body.classList.contains('large-font')); } catch(e) {}
+}
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  document.getElementById('btn-dark').textContent = isDark ? '☀️' : '🌙';
+  try { localStorage.setItem('cc-darkmode', isDark); } catch(e) {}
+}
+// Restore saved preferences on load
+try {
+  if (localStorage.getItem('cc-largefont') === 'true') document.body.classList.add('large-font');
+  if (localStorage.getItem('cc-darkmode') === 'true') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('btn-dark').textContent = '☀️';
+  }
+} catch(e) {}
 </script>
-
-<!-- ═══ ACCESSIBILITY TOOLBAR ═══ -->
-<div class="a11y-bar" id="a11y-bar">
-  <div class="a11y-row">
-    <span class="a11y-label">Large Text</span>
-    <button class="a11y-btn" id="btn-font" onclick="toggleLargeFont()" title="Toggle large text" aria-label="Toggle large text">A+</button>
-  </div>
-  <div class="a11y-row">
-    <span class="a11y-label">Dark Mode</span>
-    <button class="a11y-btn" id="btn-dark" onclick="toggleDarkMode()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
-  </div>
-</div>
-
 </body>
 </html>
